@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -56,15 +57,33 @@ public class UserRepository {
 
         PaginatedQueryList<User> result = this.mapper.query(User.class, queryExp);
 
-        if (result.isEmpty()) {
-            log.info("User - get(): item - Not Found.");
-        } else {
+        if (! result.isEmpty()) {
             user = result.get(0);
-            log.info("User - get(): item - {}", user.toString());
         }
 
         return user;
     }
+
+    /**
+     * As we can't enforce unique indexes via dynamo, this returns
+     * a list.
+     *
+     * @param email
+     * @return a list of matches
+     */
+    public List<User> findUserByEmailAddress(String email) {
+
+        final DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
+                .withIndexName(User.EMAIL_INDEX)
+                .withConsistentRead(false)
+                .withKeyConditionExpression("email = :v1")
+                .withExpressionAttributeValues(Map.of(
+                        ":v1", new AttributeValue().withS(email)
+                ));
+        return mapper.query(User.class, queryExpression);
+
+    }
+
 
     public void delete(User user) {
         this.mapper.delete(user);

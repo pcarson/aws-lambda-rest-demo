@@ -51,4 +51,22 @@ class UserRepositoryIntegrationTest extends SetupDynamoDBTest {
 
     }
 
+    @Test
+    void testBetByEmail() {
+
+        var email = "findme@x.com";
+        var repo = new UserRepository();
+        var user = new User();
+        user.setEmail(email);
+        repo.save(user);
+        assertNotNull(user.getId());
+
+        // now retrieve the same item ....
+
+        var userList = repo.findUserByEmailAddress(email);
+
+        assertEquals(1, userList.size());
+        assertEquals(email, userList.get(0).getEmail());
+    }
+
 }

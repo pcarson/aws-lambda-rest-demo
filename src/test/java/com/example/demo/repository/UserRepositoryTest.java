@@ -43,7 +43,7 @@ class UserRepositoryTest {
 
         PaginatedQueryList<User> expectedResult = mock(PaginatedQueryList.class);
         when(mapper.query(eq(User.class), any(DynamoDBQueryExpression.class))).thenReturn(expectedResult);
-        when(expectedResult.isEmpty()).thenReturn(false);
+        // when(expectedResult.isEmpty()).thenReturn(false);
         when(expectedResult.get(0)).thenReturn(new User());
         assertNotNull(userRepository.get(UUID.randomUUID().toString()));
     }
@@ -53,7 +53,7 @@ class UserRepositoryTest {
 
         PaginatedQueryList<User> expectedResult = mock(PaginatedQueryList.class);
         when(mapper.query(eq(User.class), any(DynamoDBQueryExpression.class))).thenReturn(expectedResult);
-        when(expectedResult.isEmpty()).thenReturn(true);
+        // when(expectedResult.isEmpty()).thenReturn(true);
         assertNull(userRepository.get(UUID.randomUUID().toString()));
     }
 
