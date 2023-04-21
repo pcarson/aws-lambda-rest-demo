@@ -1,0 +1,413 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example.demo</groupId>
+    <artifactId>aws-lambda-rest-demo</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>${project.artifactId}</name>
+
+    <properties>
+        <maven.compiler.sourcserverlesse>11</maven.compiler.sourcserverlesse>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.projectlombok.version>1.18.24</org.projectlombok.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <assertj-core.version>3.6.2</assertj-core.version>
+        <aws.java.sdk.version>1.12.94</aws.java.sdk.version>
+        <aws-lambda-java-log4j2.version>1.2.0</aws-lambda-java-log4j2.version>
+
+        <jackson.version>2.9.10</jackson.version>
+        <apache.commons.io.version>2.6</apache.commons.io.version>
+        <apache.commons.lang.version>3.12.0</apache.commons.lang.version>
+
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xerces</artifactId>
+            <version>2.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-log4j2</artifactId>
+            <version>${aws-lambda-java-log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sns</artifactId>
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+        <!-- additional logging requirements  -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>2.4.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.commons.io.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.org.webcompere</groupId>
+            <artifactId>system-stubs-jupiter</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--
+              Using the Apache Maven Shade plugin to package the jar
+
+              "This plugin provides the capability to package the artifact
+              in an uber-jar, including its dependencies and to shade - i.e. rename -
+              the packages of some of the dependencies."
+
+              Link: https://maven.apache.org/plugins/maven-shade-plugin/
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <finalName>${name}</finalName>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                                <exclude>META-INF/*.txt</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="com.github.edwgiz.mavenShadePlugin.log4j2CacheTransformer.PluginsCacheFileTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.edwgiz</groupId>
+                        <artifactId>maven-shade-plugin.log4j2-cachefile-transformer</artifactId>
+                        <version>2.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <finalName>${project.name}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+                <configuration>
+                    <excludes>
+                        <!--
+                        exclude integration tests from unit test phase
+                        so we don't have to download and run dynamodb local
+                         -->
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                    <environmentVariables>
+                        <AWS_ACCESS_KEY_ID>local-build-requirement</AWS_ACCESS_KEY_ID>
+                        <AWS_SECRET_KEY>sssshhhh</AWS_SECRET_KEY>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+            <!--
+              For Integration Tests run during the build phase, we need a local copy of dynamo running.
+              So: Download the DynamoDB Local artifact.
+                This will download to a Maven cache on disk and is kept until
+                the cache is cleared.  The artifact is unpacked to the target
+                directory of the build.
+            -->
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <id>install-dynamodb_local</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>
+                                https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/dynamodb_local_latest.zip
+                            </url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}/dynamodb</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+              Next: Reserve a local port for Dynamo to start on.
+                the selected port is set in the dynamodblocal.port property
+                from where it can be accessed in DynamoDBConfiguration.java
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>reserve dynamodb local port</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>dynamodblocal.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+            Then: Start DynamoDB_Local just before integration tests are run.
+              This plugin will also cleanup the process during the
+              post-integration-test phase.
+            -->
+            <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <version>0.8</version>
+                <executions>
+                    <execution>
+                        <id>dynamodb_local</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <name>dynamodb_local</name>
+                            <!--
+                              Let DynamoDB finish starting, 1 second
+                              should be enough.
+                            -->
+                            <waitAfterLaunch>1</waitAfterLaunch>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-Djava.library.path=dynamodb/DynamoDBLocal_lib</argument>
+                                <argument>-jar</argument>
+                                <argument>dynamodb/DynamoDBLocal.jar</argument>
+                                <!--
+                                  Use the port that was reserved in step 2
+                                -->
+                                <argument>-port</argument>
+                                <argument>${dynamodblocal.port}</argument>
+                                <argument>-sharedDb</argument>
+                                <argument>-inMemory</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+            Finally: run integration tests via the failsafe plugin.
+              https://maven.apache.org/surefire/maven-failsafe-plugin/
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <dynamodb.endpoint>http://localhost:${dynamodblocal.port}</dynamodb.endpoint>
+                    </systemPropertyVariables>
+                    <environmentVariables>
+                        <AWS_ACCESS_KEY_ID>local-build-requirement</AWS_ACCESS_KEY_ID>
+                        <AWS_SECRET_KEY>sssshhhh</AWS_SECRET_KEY>
+                        <USER_TABLE_NAME>local-user-demo</USER_TABLE_NAME>
+                    </environmentVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.9</version>
+                <executions>
+                    <execution>
+                        <id>coverage-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>com/example/demo/entity/**/*.class</exclude>
+                                <exclude>com/example/demo/dto/**/*.class</exclude>
+                                <exclude>com/example/demo/configuration/**/*.class</exclude>
+                                <exclude>com/example/demo/mapper/**/*.class</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <!--<version>${maven-deploy-plugin.version}</version>-->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>maven central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone/</url>
+        </repository>
+    </repositories>
+
+</project>

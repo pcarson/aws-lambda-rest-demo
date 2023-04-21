@@ -1,0 +1,142 @@
+service: ${env:STAGE_NAME}-${env:PROJECT_NAME}-${env:SERVICE_NAME}
+
+frameworkVersion: ">=3.30.0"
+
+provider:
+  stackName: '${env:STAGE_NAME}-${env:PROJECT_NAME}-${env:SERVICE_NAME}'
+  name: aws
+  runtime: java11
+  stage: local
+  timeout: 30
+  region: ${env:REGION}
+#  endpointType: REGIONAL
+  deploymentBucket:
+    name: ${env:STAGE_NAME}-${env:PROJECT_NAME}-serverless-bucket
+  apiGateway:
+    apiKeys:
+      - ${env:STAGE_NAME}-${env:PROJECT_NAME}-${env:SERVICE_NAME}-api-key
+  versionFunctions: false
+  environment:
+    USER_TABLE_NAME: ${self:provider.stage}-user
+#    DYNAMO_REGION: ${self:provider.region}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE_NAME}'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE_NAME}/index/*'
+
+package:
+  artifact: target/aws-lambda-rest-demo.jar
+
+functions:
+  getUser:
+    handler: com.example.demo.handlers.GetUserHandler
+    events:
+      - http:
+          path: /user/{id}
+          method: get
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                id: true
+
+  getUsers:
+    handler: com.example.demo.handlers.GetAllUsersHandler
+    events:
+      - http:
+          path: /users
+          method: get
+          cors: true
+          private: true
+
+  putUser:
+    handler: com.example.demo.handlers.PutUserHandler
+    events:
+      - http:
+          path: /user/{id}
+          method: put
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                id: true
+
+  createUser:
+    handler: com.example.demo.handlers.CreateUserHandler
+    events:
+      - http:
+          path: /users
+          method: post
+          cors: true
+          private: true
+
+  deleteUser:
+    handler: com.example.demo.handlers.DeleteUserHandler
+    events:
+      - http:
+          path: /user/{id}
+          method: delete
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                id: true
+
+# NB run 'npm install serverless-localstack --save-dev' for localstack integration
+# NB run 'npm install serverless-deployment-bucket --save-dev' for localstack bucket management
+plugins:
+  - serverless-localstack
+  - serverless-deployment-bucket
+
+custom:
+  localstack:
+    stages:
+      - local
+#    debug: true
+#    host: http://localhost  # optional - LocalStack host to connect to
+#    edgePort: 4566  # optional - LocalStack edge port to connect to
+#    lambda:
+#      # Enable this flag to improve performance NB caused S3 problem on localstack !!!
+#      mountCode: true  # specify either "true", or a relative path to the root Lambda mount path
+
+# NB table is created in code on the first execution, so this is not needed (and not working for the moment ...)
+#resources:
+#  - Resources:
+#      userTable:
+#        Type: AWS::DynamoDB::Table
+#        # do not delete/recreate table on re-deploy - but for localstack, redeploy
+#        # DeletionPolicy: Retain
+#        Properties:
+#          TableName: ${self:provider.environment.USER_TABLE_NAME}
+#          AttributeDefinitions:
+#            - AttributeName: id
+#              AttributeType: S
+#            - AttributeName: email
+#              AttributeType: S
+#          KeySchema:
+#            - AttributeName: id
+#              KeyType: HASH
+#          GlobalSecondaryIndexes:
+#            - IndexName: email-index
+#              KeySchema:
+#                - AttributeName: email
+#                  KeyType: HASH
+#              Projection:
+#                ProjectionType: ALL
+#          BillingMode: PAY_PER_REQUEST
+## streaming not needed on localstack
+##          StreamSpecification:
+##            StreamViewType: NEW_AND_OLD_IMAGES

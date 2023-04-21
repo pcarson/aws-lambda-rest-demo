@@ -1,0 +1,28 @@
+version: '3'
+#
+# NB, no specific volumes set, data storage will default to /var/lib/docker/volumes on ubuntu
+# clean up with docker volume prune
+#
+services:
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  awslrd-dynamodb-viewer:
+    depends_on:
+      - localstack
+    image: yamitzky/dynamodb-gui
+    tty: true
+    ports:
+      - "127.0.0.1:8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://localhost:4566
+    network_mode: "host"
