@@ -73,13 +73,13 @@ docker-compose up
 
 Compile the Java components of this project - requires 
 * a local Java SDK installation of at least Java 11
-* a local install of maven
+* a local install of maven if not using the maven wrapper mvnw as specified below
 
 then:
 
 ```agsl
-mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -DskipITs=true
-mvn clean install
+./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install -DskipITs=true
+./mvnw clean install
 ```
 
 then, run the following command to install the lambda on our local running localstack
@@ -153,7 +153,7 @@ If you are running localstack via the included docker-compose file, it also star
 ```agsl
 http://localhost:8001/
 ```
-where the dynamo tabvle contents can be viewed.
+where the dynamo table contents can be viewed.
 
 ### Testing the Java code
 
@@ -164,7 +164,7 @@ Due to the maven dynamo testing libraries (see pom.xml) we can start a local cop
 Can be written as per any other Java application
 Jacoco has been configured as part of the maven build, and when the project is built locally, e.g. with
 ```agsl
-maven clean install
+./mvnw clean install
 ```
 then the code coverage data can be found at aws-lambda-rest-demo/target/site/jacoco/index.html
 
