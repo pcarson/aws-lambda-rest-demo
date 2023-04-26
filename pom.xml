@@ -12,7 +12,7 @@
         <maven.compiler.sourcserverlesse>11</maven.compiler.sourcserverlesse>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.projectlombok.version>1.18.24</org.projectlombok.version>
+        <org.projectlombok.version>1.18.26</org.projectlombok.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <slf4j.version>1.7.30</slf4j.version>
         <assertj-core.version>3.6.2</assertj-core.version>
