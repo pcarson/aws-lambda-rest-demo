@@ -5,6 +5,11 @@
    2. [Localstack](#localstack)
 2. [Deployment](#deployment)
    1. [Development environment](#environment) 
+   2. [Prerequisites](#prerequisites)
+   3. [Install](#install)
+3. [Manual Install](#manual) 
+4. [Testing the demo](#testing)
+5. [Testing the Java code](#testingjava)
 
 ### Overview
 This (serverless) service exposes a REST API which adds items via a POST to the local-user table on localstack, and allows details of an item in the table to be exposed via a GET request.
@@ -62,7 +67,7 @@ npm install serverless-deployment-bucket --save-dev
 * [docker](https://docs.docker.com/get-docker/)
 * [docker-compose](https://docs.docker.com/compose/install/)
 
-#### Install
+#### Install <a name="install"></a>
 
 1) start the localstack container in a separate session (as it will run interactively)
 ```
@@ -74,7 +79,7 @@ docker-compose up
 ./deploy.sh
 ```
 
-### Manual Deployment
+### Manual Deployment <a name="manual"></a>
 Make sure a localstack is running locally, e.g.:
 ```agsl
 docker-compose up
@@ -117,7 +122,7 @@ Stack Outputs:
   ServerlessDeploymentBucketName: local-com-example-demo-serverless-bucket
   ServiceEndpoint: https://92zv24g2yc.execute-api.localhost.localstack.cloud:4566/local
 ```
-### Testing the localstack deployment of the REST API
+### Testing the localstack deployment of the REST API <a name="testing"></a>
 
 Using the api key and endpoint from above (these will change with every new deployment/new startup of localstack) we can format an HTTP request, as per the following examples.
 
@@ -164,7 +169,7 @@ http://localhost:8001/
 ```
 where the dynamo table contents can be viewed.
 
-### Testing the Java code
+### Testing the Java code  <a name="testingjava"></a>
 
 #### dynamo integration tests
 Due to the maven dynamo testing libraries (see pom.xml) we can start a local copy of dynamoDB and run a dynamo integration test.
