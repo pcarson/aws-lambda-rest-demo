@@ -1,10 +1,17 @@
 # aws-lambda-rest-demo
 
-### Serverless
+1. [Overview](#overview)
+   1. [Serverless](#serverless)
+   2. [Localstack](#localstack)
+2. [Deployment](#deployment)
+   1. [Development environment](#environment) 
+
+### Overview
 This (serverless) service exposes a REST API which adds items via a POST to the local-user table on localstack, and allows details of an item in the table to be exposed via a GET request.
 
 As a SERVERLESS LAMBDA process, the code is executed only while required. 
 
+#### Serverless
 It uses the open source [serverless](https://serverless.com/framework/docs/) project, and the pre-requisite setup steps can be found [here](https://serverless.com/framework/docs/providers/aws/guide/quick-start/).
 
 See [this](https://serverless.com/blog/how-to-create-a-rest-api-in-java-using-dynamodb-and-serverless/) blog post on Java and servless as a background info on the process.
@@ -22,8 +29,18 @@ The customisations made to make this project runnable on localstack, and would t
 * AWS_REGION is specifically ignored (nullified) when configuring dynamo on localstack.
 * for communication between the lambda and dynamo, i.e. both inside the localstack container, we have to specify the internal URL contained in the environment variable LOCALSTACK_HOSTNAME. 
 
-### Deployment and run/test of this demo
-#### pre-requisites:
+### Deployment and run/test of this demo <a name="deployment"></a>
+#### development environment: <a name="environment"></a>
+This code was developed and tested on:
+```agsl
+* Linux 5.15.0-71-generic #78-Ubuntu x86_64 GNU/Linux
+* OpenJDK Runtime Environment (build 17.0.6+10-Ubuntu-0ubuntu122.04)
+$ serverless --version
+Framework Core: 3.30.1
+Plugin: 6.2.3
+SDK: 4.3.2
+```
+#### pre-requisites: <a name="prerequisites"></a>
 1) serverless installed locally
 ```agsl
 npm install -g serverless
@@ -55,14 +72,6 @@ docker-compose up
 2) deploy the lambda
 ```agsl
 ./deploy.sh
-```
-
-### The versions on which this code was developed and tested:
-```agsl
-$ serverless --version
-Framework Core: 3.30.1
-Plugin: 6.2.3
-SDK: 4.3.2
 ```
 
 ### Manual Deployment
