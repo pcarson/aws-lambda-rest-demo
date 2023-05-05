@@ -17,7 +17,7 @@ This (serverless) service exposes a REST API which adds items via a POST to the 
 As a SERVERLESS LAMBDA process, the code is executed only while required. 
 
 #### Serverless
-It uses the open source [serverless](https://serverless.com/framework/docs/) project, and the pre-requisite setup steps can be found [here](https://serverless.com/framework/docs/providers/aws/guide/quick-start/).
+It uses the open source [Serverless Framework](https://serverless.com/framework/docs/) project, and the pre-requisite setup steps can be found [here](https://serverless.com/framework/docs/providers/aws/guide/quick-start/).
 
 See [this](https://serverless.com/blog/how-to-create-a-rest-api-in-java-using-dynamodb-and-serverless/) blog post on Java and servless as a background info on the process.
 
