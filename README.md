@@ -182,4 +182,13 @@ Jacoco has been configured as part of the maven build, and when the project is b
 ```
 then the code coverage data can be found at aws-lambda-rest-demo/target/site/jacoco/index.html
 
+### Sonar
+Sonar can be built stand-alone as detailed below if you have access to an instance.
+NB You'll need to update the 'sonar' properties in the pom.xml file to identify the host and login token to be used when sending analysis to sonar.
+
+```$xslt
+mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install
+mvn sonar:sonar
+```
+
 TODO - expand this README ........

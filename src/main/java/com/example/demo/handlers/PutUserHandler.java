@@ -14,8 +14,6 @@ import java.util.Map;
 @Slf4j
 public class PutUserHandler extends BaseHandler {
 
-    private static final String METRICS_ACTION = "put";
-
     public PutUserHandler() {
         super();
     }

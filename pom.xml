@@ -9,8 +9,8 @@
     <name>${project.artifactId}</name>
 
     <properties>
-        <maven.compiler.sourcserverlesse>11</maven.compiler.sourcserverlesse>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.sourcserverlesse>1</maven.compiler.sourcserverlesse>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.projectlombok.version>1.18.26</org.projectlombok.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
@@ -22,6 +22,17 @@
         <jackson.version>2.9.10</jackson.version>
         <apache.commons.io.version>2.6</apache.commons.io.version>
         <apache.commons.lang.version>3.12.0</apache.commons.lang.version>
+
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.login>199318437e72c10d1471e4ff659c85b7e689d104</sonar.login>
+        <sonar.coverage.exclusions>
+            **/enums/**/*,
+            **/entity/**/*,
+            **/dto/**/*,
+            **/s3/**/*,
+            **/sns/**/*,
+            **/util/*
+        </sonar.coverage.exclusions>
 
     </properties>
 
